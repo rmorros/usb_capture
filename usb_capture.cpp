@@ -54,14 +54,19 @@ int main(int, char**)
     long msecCounter = 0;
     long frameNumber = 0;
 
-    std::string NAME = "patata.mov";
+    //std::string NAME = "patata.mov";
+    std::string NAME = mytimestr();
+
+
+
+    
     
     //int ex = -1; // Pop-up window asking for available codecs
     int codec = CV_FOURCC('M','J','P','G');
 
     VideoWriter outputVideo;
     Size S = Size(width, height);
-    outputVideo.open(NAME , codec, fps, S, true);
+    outputVideo.open(NAME+".mov" , codec, fps, S, true);
 
 
     std::ofstream index_file(NAME.c_str(), std::ofstream::out);
