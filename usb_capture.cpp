@@ -54,7 +54,7 @@ int main(int, char**)
     long msecCounter = 0;
     long frameNumber = 0;
 
-    std::string NAME = "patata.mp4";
+    std::string NAME = "patata.mov";
     
     //int ex = -1; // Pop-up window asking for available codecs
     int codec = CV_FOURCC('M','J','P','G');
