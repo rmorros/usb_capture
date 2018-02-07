@@ -12,24 +12,60 @@
 
 //! https://stackoverflow.com/questions/44490743/how-to-extract-timestamps-from-each-frame-obtained-by-usb-camera
 
+#include <iostream>
+#include <fstream>
+#include <ctime>
+
 #include "opencv2/opencv.hpp"
+
 using namespace cv;
+
+// https://stackoverflow.com/questions/16357999/current-date-and-time-as-string
+std::string mytimestr(void)
+{
+  time_t rawtime;
+  struct tm * timeinfo;
+  char buffer[80];
+
+  time (&rawtime);
+  timeinfo = localtime(&rawtime);
+
+  strftime(buffer,sizeof(buffer),"%d-%m-%Y-%I-%M-%S",timeinfo);
+  return std::string(buffer);
+}
+
 int main(int, char**)
 {
     VideoCapture cap(0); // open the default camera
     if(!cap.isOpened())  // check if we succeeded
         return -1;
 
+    int width  = 1920;
+    int height = 1080;
+    double fps =   25.0;
+    
     // TODO: change the width, height, and capture FPS to your desired
     // settings.
-    cap.set(CAP_PROP_FRAME_WIDTH, 1920);
-    cap.set(CAP_PROP_FRAME_HEIGHT, 1080);
-    cap.set(CAP_PROP_FPS, 30);
+    cap.set(CAP_PROP_FRAME_WIDTH,  width);
+    cap.set(CAP_PROP_FRAME_HEIGHT, height);
+    cap.set(CAP_PROP_FPS, fps);
 
-    Mat frame;
+    Mat  frame;
     long msecCounter = 0;
     long frameNumber = 0;
 
+    std::string NAME = "patata.mp4";
+    
+    //int ex = -1; // Pop-up window asking for available codecs
+    int codec = CV_FOURCC('M','J','P','G');
+
+    VideoWriter outputVideo;
+    Size S = Size(width, height);
+    outputVideo.open(NAME , codec, fps, S, true);
+
+
+    std::ofstream index_file(NAME.c_str(), std::ofstream::out);
+          
     for(;;)
     {            
         // Instead of cap >> frame; we'll do something different.
@@ -53,35 +89,25 @@ int main(int, char**)
 
             // VideoCapture::retrieve color converts the image and places
             // it in the Mat that you provide.
-            if(cap.retrieve(&frame))
+            if(cap.retrieve(frame))
             {
-                // Pass the frame and parameters to your processing
-                // method.
-                ProcessFrame(&frame, msecCounter, frameNumber);
+                outputVideo.write(frame);
+
+                // Save frame & timestamp to .ndx file
+                index_file << frameNumber << "\t" << msecCounter << std::endl;
             }
         }
 
         // TODO: Handle your loop termination condition here
     }
+
+    
+    index_file.close();
+    
     // the camera will be deinitialized automatically in VideoCapture destructor
     return 0;
 }
 
-void ProcessFrame(Mat& frame, long msecCounter, long frameNumber)
-{
-    // TODO: Make a copy of frame if you are going to process it
-    // asynchronously or put it in a buffer or queue and then return
-    // control from this function. This is because the reference Mat
-    // being passed in is "owned" by the processing loop, and on each
-    // iteration it will be destructed, so any references to it will be
-    // invalid. Hence, if you do any work async, you need to copy frame.
-    //
-    // If all your processing happens synchronously in this function,
-    // you don't need to make a copy first because the loop is waiting
-    // for this function to return.
-
-    // TODO: Your processing logic goes here.
-}
 
 
 
