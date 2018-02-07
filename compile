@@ -1,1 +1,5 @@
 g++ -g -o binary  usb_capture.cpp -lopencv_core -lopencv_videoio
+
+
+
+g++ -g -o binary  -I/usr/local/Cellar/opencv3/3.2.0/include  -L/usr/local/Cellar/opencv3/3.2.0/lib usb_capture.cpp -lopencv_core -lopencv_videoio
