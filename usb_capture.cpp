@@ -40,10 +40,11 @@ int main(int, char**)
     if(!cap.isOpened())  // check if we succeeded
         return -1;
 
-    int width  = 1920;
-    int height = 1080;
+    int width  = 1280;
+    int height =  720;
     double fps =   25.0;
-    
+
+        
     // TODO: change the width, height, and capture FPS to your desired
     // settings.
     cap.set(CAP_PROP_FRAME_WIDTH,  width);
