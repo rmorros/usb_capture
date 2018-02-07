@@ -71,7 +71,9 @@ int main(int, char**)
 
 
     std::ofstream index_file(NAME.c_str(), std::ofstream::out);
-          
+
+    long frame_num = 0;
+    
     for(;;)
     {            
         // Instead of cap >> frame; we'll do something different.
@@ -100,7 +102,7 @@ int main(int, char**)
                 outputVideo.write(frame);
 
                 // Save frame & timestamp to .ndx file
-                index_file << frameNumber << "\t" << msecCounter << std::endl;
+                index_file << frame_num++ << "\t" << frameNumber << "\t" << msecCounter << "\t" << mytimestr() << std::endl;
             }
         }
 
