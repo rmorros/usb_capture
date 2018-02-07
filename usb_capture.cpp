@@ -67,7 +67,7 @@ int main(int, char**)
 
     VideoWriter outputVideo;
     Size S = Size(width, height);
-    outputVideo.open(NAME+".mov" , codec, fps, S, true);
+    outputVideo.open(NAME+".avi" , codec, fps, S, true);
 
 
     std::ofstream index_file(NAME.c_str(), std::ofstream::out);
