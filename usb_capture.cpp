@@ -51,7 +51,7 @@ int main(int, char**)
     cap.set(CAP_PROP_FRAME_HEIGHT, height);
     cap.set(CAP_PROP_FPS, fps);
 
-    Mat  frame;
+    Mat  frame(width,height,3);
     long msecCounter = 0;
     long frameNumber = 0;
 
@@ -74,7 +74,8 @@ int main(int, char**)
 
     long frame_num = 0;
     
-    for(;;)
+    // for(;;)
+    for(int i=0; i < 300; ++i)  // 12s@25Hz
     {            
         // Instead of cap >> frame; we'll do something different.
         //
@@ -92,17 +93,24 @@ int main(int, char**)
 
         if(cap.grab())
         {
-            msecCounter = (long) cap.get(CAP_PROP_POS_MSEC);
-            frameNumber = (long) cap.get(CAP_PROP_POS_FRAMES);
+ 	    std::string sts = mytimestr();
+	    std::cout << sts << std::endl;
 
+            msecCounter = (long) cap.get(CAP_PROP_POS_MSEC);
+            //frameNumber = (long) cap.get(CAP_PROP_POS_FRAMES);
+
+	    std::cout << msecCounter << std::endl;
+	    
             // VideoCapture::retrieve color converts the image and places
             // it in the Mat that you provide.
             if(cap.retrieve(frame))
             {
-                outputVideo.write(frame);
+		std::cout << "dims = " << frame.dims << std::endl;
+		std::cout << "size = " << frame.size() << std::endl;
+                //outputVideo.write(frame);
 
                 // Save frame & timestamp to .ndx file
-                index_file << frame_num++ << "\t" << frameNumber << "\t" << msecCounter << "\t" << mytimestr() << std::endl;
+                index_file << frame_num++ << "\t" << frameNumber << "\t" << msecCounter << "\t" << sts << std::endl;
             }
         }
 
