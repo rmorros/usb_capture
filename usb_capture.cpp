@@ -15,13 +15,14 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
+#include <sys/time.h>
 
 #include "opencv2/opencv.hpp"
 
 using namespace cv;
 
 // https://stackoverflow.com/questions/16357999/current-date-and-time-as-string
-std::string mytimestr(void)
+std::string mytimestr(bool ms)
 {
   time_t rawtime;
   struct tm * timeinfo;
@@ -31,8 +32,17 @@ std::string mytimestr(void)
   timeinfo = localtime(&rawtime);
 
   strftime(buffer,sizeof(buffer),"%d-%m-%Y-%I-%M-%S",timeinfo);
+
+  if (ms)
+  {
+      struct timeval tv;
+      gettimeofday(&tv, NULL); 
+      sprintf(buffer, "%s-%d",buffer,tv.tv_usec/1000);
+  }
+
   return std::string(buffer);
 }
+
 
 int main(int, char**)
 {
@@ -56,7 +66,7 @@ int main(int, char**)
     long frameNumber = 0;
 
     //std::string NAME = "patata.mov";
-    std::string NAME = mytimestr();
+    std::string NAME = mytimestr(false);
 
 
 
@@ -93,8 +103,7 @@ int main(int, char**)
 
         if(cap.grab())
         {
- 	    std::string sts = mytimestr();
-	    std::cout << sts << std::endl;
+ 	    std::string sts = mytimestr(true);
 
             msecCounter = (long) cap.get(CAP_PROP_POS_MSEC);
             //frameNumber = (long) cap.get(CAP_PROP_POS_FRAMES);
@@ -105,9 +114,7 @@ int main(int, char**)
             // it in the Mat that you provide.
             if(cap.retrieve(frame))
             {
-		std::cout << "dims = " << frame.dims << std::endl;
-		std::cout << "size = " << frame.size() << std::endl;
-                //outputVideo.write(frame);
+                outputVideo.write(frame);
 
                 // Save frame & timestamp to .ndx file
                 index_file << frame_num++ << "\t" << frameNumber << "\t" << msecCounter << "\t" << sts << std::endl;
