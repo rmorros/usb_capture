@@ -46,31 +46,30 @@ std::string mytimestr(bool ms)
 
 int main(int, char**)
 {
+
+    // TODO: change the width, height, and capture FPS to your desired
+    // settings.
+    int width  = 640;
+    int height = 480;
+    double fps =  25.0;
+        
     VideoCapture cap(0); // open the default camera
     if(!cap.isOpened())  // check if we succeeded
         return -1;
 
-    int width  = 640;
-    int height = 480;
-    double fps =  25.0;
-
-        
     // TODO: change the width, height, and capture FPS to your desired
     // settings.
     cap.set(CAP_PROP_FRAME_WIDTH,  width);
     cap.set(CAP_PROP_FRAME_HEIGHT, height);
-    cap.set(CAP_PROP_FPS, fps);
+    cap.set(CAP_PROP_FPS, fps);    // Does not work! Camera allways captures at ~30fps
 
-    Mat  frame(width,height,3);
+    Mat  frame;
     long msecCounter = 0;
     long frameNumber = 0;
 
-    //std::string NAME = "patata.mov";
+    long counter = 0;
+   
     std::string NAME = mytimestr(false);
-
-
-
-    
     
     //int ex = -1; // Pop-up window asking for available codecs
     int codec = CV_FOURCC('M','J','P','G');
@@ -82,8 +81,6 @@ int main(int, char**)
 
     std::ofstream index_file(NAME.c_str(), std::ofstream::out);
 
-    long frame_num = 0;
-    
     // for(;;)
     for(int i=0; i < 300; ++i)  // 12s@25Hz
     {            
@@ -103,13 +100,11 @@ int main(int, char**)
 
         if(cap.grab())
         {
- 	    std::string sts = mytimestr(true);
+            std::string sts = mytimestr(true);
 
             msecCounter = (long) cap.get(CAP_PROP_POS_MSEC);
             //frameNumber = (long) cap.get(CAP_PROP_POS_FRAMES);
 
-	    std::cout << msecCounter << std::endl;
-	    
             // VideoCapture::retrieve color converts the image and places
             // it in the Mat that you provide.
             if(cap.retrieve(frame))
@@ -117,7 +112,7 @@ int main(int, char**)
                 outputVideo.write(frame);
 
                 // Save frame & timestamp to .ndx file
-                index_file << frame_num++ << "\t" << frameNumber << "\t" << msecCounter << "\t" << sts << std::endl;
+                index_file << counter++ << "\t" << frameNumber << "\t" << msecCounter << "\t" << sts << std::endl;
             }
         }
 
