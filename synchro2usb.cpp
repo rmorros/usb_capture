@@ -57,13 +57,14 @@ int main()
     int height = 480;
     double fps =  25.0;  
 
+    
     cv::VideoCapture captureL(0);
     if (!captureL.isOpened())
     {
         std::cout << "L doesn't work" << std::endl;
         return -1;
     }
-    VideoCapture captureR(1);
+    VideoCapture captureR(2);
     if (!captureR.isOpened())
     {
         std::cout << "R doesn't work" << std::endl;
@@ -79,7 +80,7 @@ int main()
     captureR.set(CAP_PROP_FPS, fps); // Does not work! Camera always captures at ~30fps
 
     
-    cv::Mat frameL, frameR, frame;
+    cv::Mat frameL(width,height,3), frameR(width,height,3), frame(width,height,3);
 
     uint64 msecCounterL = 0;
     uint64 frameNumberL = 0;
@@ -94,7 +95,7 @@ int main()
     int codec = CV_FOURCC('M','J','P','G');
 
     VideoWriter outputVideo;
-    Size S = Size(width, height);
+    Size S = Size(2*width, height);
     outputVideo.open(NAME+".avi" , codec, fps, S, true);
 
     std::ofstream index_file(NAME.c_str(), std::ofstream::out);
@@ -105,8 +106,6 @@ int main()
 
     int debug_count = 0;
 
-    std::cout << "TP" << debug_count++ << std::endl;
-    
     for (;;)
     {
         // Instead of cap >> frame; we'll do something different.
@@ -128,8 +127,6 @@ int main()
         okR = captureR.grab();
         std::string stsR = mytimestr(true);
 
-        std::cout << "TP" << debug_count++ << std::endl;
-        
         if(okL && okR)
         {
             msecCounterL = (uint64) captureL.get(CAP_PROP_POS_MSEC);
@@ -137,19 +134,31 @@ int main()
             msecCounterR = (uint64) captureR.get(CAP_PROP_POS_MSEC);
             //frameNumberR = (uint64) captureR.get(CAP_PROP_POS_FRAMES);
 
-            std::cout << "TP" << debug_count++ << std::endl;
-
             // VideoCapture::retrieve color converts the image and places
             // it in the Mat that you provide.
             resL = captureL.retrieve(frameL);
             resR = captureR.retrieve(frameR);
 
-            std::cout << "TP" << debug_count++ << std::endl;
-
             if (resL && resR)
             {
                 cv::hconcat(frameL, frameR, frame);
-                outputVideo.write(frame);
+		
+		cv::Mat frame3;
+		if (frame.channels() < 3)
+		{
+		  std::vector<Mat> channels;
+		  channels.push_back(frame);
+		  channels.push_back(frame);
+		  channels.push_back(frame);
+
+		  cv::merge(channels, frame3);
+		}
+		else
+		{
+		    frame3 = frame;
+		}
+
+                outputVideo.write(frame3);
 
                 // Save frame & timestamp to .ndx file
                 index_file << counterL++ << "\t" << counterR++ << "\t" << msecCounterL << "\t" << msecCounterR << "\t" << stsL << "\t" << stsR << std::endl;
