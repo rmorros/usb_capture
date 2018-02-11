@@ -50,9 +50,9 @@ int main(int, char**)
     if(!cap.isOpened())  // check if we succeeded
         return -1;
 
-    int width  = 1280;
-    int height =  720;
-    double fps =   25.0;
+    int width  = 640;
+    int height = 480;
+    double fps =  25.0;
 
         
     // TODO: change the width, height, and capture FPS to your desired
