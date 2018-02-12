@@ -59,9 +59,9 @@ void  call_from_thread(cv::VideoCapture& capture, cv::Mat& frame, std::pair<std:
     {
         msecCounter = (uint64) capture.get(CAP_PROP_POS_MSEC);
 
-	// VideoCapture::retrieve color converts the image and places
-	// it in the Mat that you provide.
-	bool res = capture.retrieve(frame);
+        // VideoCapture::retrieve color converts the image and places
+        // it in the Mat that you provide.
+        bool res = capture.retrieve(frame);
     }
     else
     {
@@ -144,25 +144,23 @@ int main()
     {
 #ifdef USE_THREADS
         //Call function from one thread
-        tt[0] = std::thread(call_from_thread, captureL, frameL, outL);
+        tt[0] = std::thread(call_from_thread, std::ref(captureL), std::ref(frameL), std::ref(outL));
         //Call function from another thread
-        tt[1] = std::thread(call_from_thread, captureR, frameR, outR);
+        tt[1] = std::thread(call_from_thread, std::ref(captureR), std::ref(frameR), std::ref(outR));
 
-	// Join the threads with the main thread
+        // Join the threads with the main thread
         tt[0].join();
         tt[1].join();
 
-	if (outL.first != "" && outR.first != "")
-	{
-	    cv::hconcat(frameL, frameR, frame);
-	    outputVideo.write(frame);
-
-	    // Save frame & timestamp to .ndx file
-	    index_file << counter++ << "\t" << outL.second << "\t" << outR.second << "\t" << outL.first << "\t" << outR.first << std::endl;
-	}
-
+        if (outL.first != "" && outR.first != "")
+        {
+            cv::hconcat(frameL, frameR, frame);
+            outputVideo.write(frame);
+            
+            // Save frame & timestamp to .ndx file
+            index_file << counter++ << "\t" << outL.second << "\t" << outR.second << "\t" << outL.first << "\t" << outR.first << std::endl;
+        }
 #else
-
         okL = captureL.grab();
         std::string stsL = mytimestr(true);
         okR = captureR.grab();
@@ -183,21 +181,21 @@ int main()
             if (resL && resR)
             {
                 cv::hconcat(frameL, frameR, frame);
-		
-		cv::Mat frame3;
-		if (frame.channels() < 3)
-		{
-		  std::vector<Mat> channels;
-		  channels.push_back(frame);
-		  channels.push_back(frame);
-		  channels.push_back(frame);
-
-		  cv::merge(channels, frame3);
-		}
-		else
-		{
-		    frame3 = frame;
-		}
+        
+                cv::Mat frame3;
+                if (frame.channels() < 3)
+                {
+                    std::vector<Mat> channels;
+                    channels.push_back(frame);
+                    channels.push_back(frame);
+                    channels.push_back(frame);
+                    
+                    cv::merge(channels, frame3);
+                }
+                else
+                {
+                    frame3 = frame;
+                }
 
                 outputVideo.write(frame3);
 
