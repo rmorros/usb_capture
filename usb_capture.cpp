@@ -109,6 +109,7 @@ int main(int, char**)
             // it in the Mat that you provide.
             if(cap.retrieve(frame))
             {
+ 	        std::cout << frame.dims << std::endl;
                 outputVideo.write(frame);
 
                 // Save frame & timestamp to .ndx file
