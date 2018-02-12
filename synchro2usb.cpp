@@ -1,15 +1,34 @@
-// --------------------------------------------------------------
-// Copyright (C)
-// Universitat Politecnica de Catalunya (UPC) - Barcelona - Spain
-// --------------------------------------------------------------
+// Copyright <2018> <Josep Ramon Morros - Universitat Politecnica de Catalunya (UPC) - Barcelona - Spain>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+// associated documentation files (the "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial
+// portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+// LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+// WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+// SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 
 //!
 //!  \file synchro2usb.cpp
 //!
-//!  Add brief description of the file here
+//!  Capture from two USB cameras. Ttested with a stereo ELP module:
+//!  https://es.aliexpress.com/store/product/ELP-AR0330-Dual-Lente-de-2MP-HD-1080-P-Plug-and-play-Est-reo-c-mara/126493_32838910057.html
+//!
+//!  Some useful information used to write this code:
+//! 
+//! https://stackoverflow.com/questions/44490743/how-to-extract-timestamps-from-each-frame-obtained-by-usb-camera
+//! https://stackoverflow.com/questions/16357999/current-date-and-time-as-string
+//! https://solarianprogrammer.com/2011/12/16/cpp-11-thread-tutorial/
 //!
 
-//! https://stackoverflow.com/questions/44490743/how-to-extract-timestamps-from-each-frame-obtained-by-usb-camera
 
 #include <iostream>
 #include <fstream>
@@ -23,8 +42,9 @@
 using namespace cv;
 
 
+#define USE_THREADS = 1
 
-// https://stackoverflow.com/questions/16357999/current-date-and-time-as-string
+
 std::string mytimestr(bool ms)
 {
   time_t rawtime;
@@ -70,18 +90,15 @@ void  call_from_thread(cv::VideoCapture& capture, cv::Mat& frame, std::pair<std:
     out = std::make_pair(sts,msecCounter);
 }
 
-
-
-#define USE_THREADS = 1
-
-
 int main()
 {
 
     // TODO: change the width, height, and capture FPS to your desired
     // settings.
-    int width  = 640;
-    int height = 480;
+    //int width  = 640;
+    //int height = 480;
+    int width  = 1920;
+    int height = 1080;
     double fps =  25.0;  
 
     
@@ -91,7 +108,7 @@ int main()
         std::cout << "L doesn't work" << std::endl;
         return -1;
     }
-    VideoCapture captureR(2);
+    VideoCapture captureR(1);
     if (!captureR.isOpened())
     {
         std::cout << "R doesn't work" << std::endl;
