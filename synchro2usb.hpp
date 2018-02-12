@@ -14,6 +14,10 @@
 
 
 #include <boost/cstdint.hpp> // see http://www.boost.org/doc/libs/1_50_0/libs/integer/doc/html/boost_integer/cstdint.html
+#include <opencv2/opencv.hpp>
+
+
+
 //#include <cstdint>         // should replace boost version with C++11?
 
 // Define integer types (8, 16, 32, 64)
@@ -52,6 +56,12 @@ typedef float                 float32;
 
 //! Signed 64 bits float     \ingroup ImagePlusTypes
 typedef double                float64;
+
+
+
+
+std::string mytimestr(bool ms);
+void  call_from_thread(cv::VideoCapture& capture, cv::Mat& frame, std::pair<std::string, uint64>& out);
 
 #endif
 
