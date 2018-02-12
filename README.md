@@ -1,2 +1,2 @@
 # usb_capture
-Capture from two neighbor cameras &amp; stich the images 
+Capture from a single or two neighbor USB cameras &amp; stich the images. A file with the timestamps of each frame is generated.
