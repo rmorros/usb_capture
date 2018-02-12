@@ -98,21 +98,25 @@ int main()
         return -1;
     }
 
+    //int codec = -1; // Pop-up window asking for available codecs
+    int codec = CV_FOURCC('M','J','P','G');
+
     captureL.set(CAP_PROP_FRAME_WIDTH,  width);
     captureL.set(CAP_PROP_FRAME_HEIGHT, height);
     captureL.set(CAP_PROP_FPS, fps); // Does not work! Camera always captures at ~30fps
-
+    captureL.set(CAP_PROP_FOURCC, codec);
+    
+    
     captureR.set(CAP_PROP_FRAME_WIDTH,  width);
     captureR.set(CAP_PROP_FRAME_HEIGHT, height);
     captureR.set(CAP_PROP_FPS, fps); // Does not work! Camera always captures at ~30fps
+    captureR.set(CAP_PROP_FOURCC, codec);
 
     
     cv::Mat frameL(width,height,3), frameR(width,height,3), frame(width,height,3);
 
     std::string NAME = mytimestr(false);
 
-    //int ex = -1; // Pop-up window asking for available codecs
-    int codec = CV_FOURCC('M','J','P','G');
 
     VideoWriter outputVideo;
     Size S = Size(2*width, height);
