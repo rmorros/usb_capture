@@ -1,16 +1,21 @@
-g++ -g -o usb_capture  usb_capture.cpp -lopencv_core -lopencv_videoio
+
+Linux:
+-----
+g++ -O2 -o usb_capture  usb_capture.cpp -lopencv_core -lopencv_videoio
+
+Mac OSX:
+-------
+g++ -O2 -o usb_capture  -I/usr/local/Cellar/opencv3/3.2.0/include  -L/usr/local/Cellar/opencv3/3.2.0/lib usb_capture.cpp -lopencv_core -lopencv_videoio
 
 
 
-g++ -g -o usb_capture  -I/usr/local/Cellar/opencv3/3.2.0/include  -L/usr/local/Cellar/opencv3/3.2.0/lib usb_capture.cpp -lopencv_core -lopencv_videoio
+Linux:
+-----
+g++ -std=c++11 -pthread  -O2 -o synchro2usb  synchro2usb.cpp -lopencv_core -lopencv_videoio
 
-
-
-
-g++ -g -o synchro2usb  synchro2usb.cpp -lopencv_core -lopencv_videoio
-
-
-g++ -std=c++11 -pthread -g -o synchro2usb  -I/usr/local/Cellar/opencv3/3.2.0/include  -L/usr/local/Cellar/opencv3/3.2.0/lib synchro2usb.cpp -lopencv_core -lopencv_videoio
+Mac OSX:
+-------
+g++ -std=c++11 -pthread -O2 -o synchro2usb  -I/usr/local/Cellar/opencv3/3.2.0/include  -L/usr/local/Cellar/opencv3/3.2.0/lib synchro2usb.cpp -lopencv_core -lopencv_videoio
 
 
 
