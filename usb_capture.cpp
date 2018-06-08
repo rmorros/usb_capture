@@ -32,6 +32,7 @@
 
 #include "opencv2/opencv.hpp"
 
+// Uso opencv
 using namespace cv;
 
 
